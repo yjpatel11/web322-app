@@ -51,3 +51,70 @@ exports.getCategories = async () => {
         }
     });
 };
+
+exports.getPostByCategory = async (category) => {
+    return new Promise((resolve, reject) => {
+        if (posts.length === 0) {
+            reject("posts.json not loaded");
+        } else {
+            const res = posts.filter((post) => post.category === parseInt(category));
+            if (res == null || res.length == 0) {
+                reject("no posts found");
+            }
+            else {
+                resolve(res);
+            }
+        }
+    });
+}
+
+exports.getPostsByMinDate = async (minDate) => {
+    return new Promise((resolve, reject) => {
+        if (posts.length === 0) {
+            reject("posts.json not loaded");
+        } else {
+            const res = posts.filter((post) => {
+                return new Date(post.postDate) >= new Date(minDate)
+            });
+            if (res == null || res.length == 0) {
+                reject("no posts found");
+            } else {
+                resolve(res);
+            }
+        }
+    });
+}
+
+exports.getPostById = async (id) => {
+    return new Promise((resolve, reject) => {
+        if (posts.length === 0) {
+            reject("posts.json not loaded");
+        } else {
+            const res = posts.find((post) => post.id.toString() === id.toString());
+            if (res == null || res.length == 0) {
+
+                reject("no posts found");
+            } else {
+                resolve(res);
+            }
+        }
+    });
+}
+
+
+exports.addPost = async (postData) => {
+    return new Promise((resolve, reject) => {
+        if (posts.length === 0) {
+            reject("posts.json not loaded");
+        } else {
+            if (postData.published === undefined) {
+                postData.published = false;
+            } else {
+                postData.published = true;
+            }
+            postData.id = posts.length + 1;
+            posts.push(postData);
+            resolve(postData);
+        }
+    });
+}
